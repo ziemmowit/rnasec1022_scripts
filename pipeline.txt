@@ -1,0 +1,16 @@
+
+/* 1. Feature counting */
+
+bash$ for i in {1..34};do featureCounts -T 2 -a homosapiens.gtf -o s$i.txt s$i.Aligned.sortedByCoord.out.bam;done;
+
+/* 2. Translate Ensembl Id to Gene names */
+
+bash$ for i in {1..34};do python3 parse.py s$i.txt > o/s$i.csv;done;
+
+/* 3. iCount    */
+/*  Get peaks   */
+
+bash$ peak.sh
+
+/* 4. Add sequences for peaks files */
+bash$ for i in {1..34};do python3 add_sequences.py ../storage_docker/peaks_s$i/s$i\_scores.tsv ../hg38.2bit  > ../storage_docker/peaks_s$i/s\$i_scores_withSeq.tsv;done;
